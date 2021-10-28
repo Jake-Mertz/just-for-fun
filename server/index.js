@@ -1,10 +1,14 @@
+require('dotenv/config');
 const express = require('express');
 const path = require('path');
-const logger = require('./middleware/logger');
+const errorMiddleware = require('./error-middleware');
+const logger = require('./logger');
+
 const app = express();
 
 // Init middleware
 app.use(logger);
+app.use(errorMiddleware);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -12,6 +16,7 @@ app.use(express.urlencoded({ extended: false }));
 // Set static folder
 app.use(express.static(path.join(__dirname, 'public')));
 
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Server started on port ${port}`);
+});
